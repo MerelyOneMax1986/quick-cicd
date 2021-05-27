@@ -1,5 +1,6 @@
 node('master') {
-    dir("${WORKSPACE}/app") {
-        sh "docker build -t ${DOCKER_IMAGE} ."
+    dir("${WORKSPACE}") {
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/MerelyOneMax1986/quick-cicd']]])
+        sh "cd app && docker build -t ${DOCKER_IMAGE} ."
     }
 }
