@@ -3,6 +3,7 @@ import hudson.plugins.git.*
 import hudson.plugins.git.extensions.*
 import hudson.plugins.git.extensions.impl.*
 import jenkins.model.Jenkins
+import hudson.model.StringParameterDefinition
 
 def createJob (jobName, gitRepo, branch) {
     def jenkinsFile = "devops/${jobName}/Jenkinsfile"
@@ -19,10 +20,13 @@ def createJob (jobName, gitRepo, branch) {
     def branchConfig                =   [new BranchSpec(jobParameters.branch)]
     def userConfig                  =   [new UserRemoteConfig(jobParameters.repository, null, null, jobParameters.credentialId)]
     def cleanBeforeCheckOutConfig   =   new CleanBeforeCheckout()
-    def sparseCheckoutPathConfig    =   new SparseCheckoutPaths([new SparseCheckoutPath(jenkinsFile)])
+    //def sparseCheckoutPathConfig    =   new SparseCheckoutPaths([new SparseCheckoutPath(jenkinsFile)])
     def cloneConfig                 =   new CloneOption(true, true, null, 3)
-    def extensionsConfig            =   [cleanBeforeCheckOutConfig,sparseCheckoutPathConfig,cloneConfig]
+    //def extensionsConfig            =   [cleanBeforeCheckOutConfig,sparseCheckoutPathConfig,cloneConfig]
+    def extensionsConfig = []
     def scm                         =   new GitSCM(userConfig, branchConfig, false, [], null, null, extensionsConfig)
+    
+    def param = new StringParameterDefinition('DOCKER_IMAGE', 'consul-app:0.0.0.1', 'Docker image to build or deploy');
 
     // define SCM flow
     def flowDefinition = new org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition(scm, jenkinsFile)
@@ -41,8 +45,10 @@ def createJob (jobName, gitRepo, branch) {
 
     // set job description
     job.setDescription(jobParameters.description)
-
-    // save to disk
+    
+    job.addProperty(new ParametersDefinitionProperty([param]))
+    
+      // save to disk
     jenkins.save()
     jenkins.reload()
 }
