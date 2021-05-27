@@ -15,7 +15,7 @@ docker rm -f cclient && docker run \
 cd env/jenkins 
 
 # Build custon Jenkins installation
-docker build . --tag jenkins-docker
+docker build --tag jenkins-docker ./jenkins/
 
 # Run custom image with 2 preinstalled jobs and plugins
 docker rm -f jenkins && docker run \
