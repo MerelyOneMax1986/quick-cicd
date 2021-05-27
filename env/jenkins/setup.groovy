@@ -33,7 +33,7 @@ def createJob (jobName, gitRepo, branch) {
     def flowDefinition = new org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition(scm, jenkinsFile)
 
     // set lightweight checkout
-    flowDefinition.setLightweight(false)
+    flowDefinition.setLightweight(true)
 
     // get Jenkins instance
     Jenkins jenkins = Jenkins.getInstance()
