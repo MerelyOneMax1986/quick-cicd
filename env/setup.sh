@@ -7,7 +7,8 @@ docker rm -f cserver && docker run \
     consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
 
 # Run consul client
-docker rm -f cclient && docker -d run \
+docker rm -f cclient && docker run \
+   -d \ 
    --name=cclient \
    consul agent -node=client-1 -join=$(docker exec -it cserver hostname -i)
 
