@@ -21,10 +21,10 @@ def createJob (jobName, gitRepo, branch) {
     def branchConfig                =   [new BranchSpec(jobParameters.branch)]
     def userConfig                  =   [new UserRemoteConfig(jobParameters.repository, null, null, jobParameters.credentialId)]
     def cleanBeforeCheckOutConfig   =   new CleanBeforeCheckout()
-    //def sparseCheckoutPathConfig    =   new SparseCheckoutPaths([new SparseCheckoutPath(jenkinsFile)])
+    def sparseCheckoutPathConfig    =   new SparseCheckoutPaths([new SparseCheckoutPath(jenkinsFile)])
     def cloneConfig                 =   new CloneOption(true, true, null, 3)
-    //def extensionsConfig            =   [cleanBeforeCheckOutConfig,sparseCheckoutPathConfig,cloneConfig]
-    def extensionsConfig = []
+    def extensionsConfig            =   [cleanBeforeCheckOutConfig,sparseCheckoutPathConfig,cloneConfig]
+    //def extensionsConfig = []
     def scm                         =   new GitSCM(userConfig, branchConfig, false, [], null, null, extensionsConfig)
     
     def param = new StringParameterDefinition('DOCKER_IMAGE', 'consul-app:0.0.0.1', 'Docker image to build or deploy');
