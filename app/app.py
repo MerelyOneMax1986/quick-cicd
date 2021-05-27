@@ -3,19 +3,21 @@ from flask_restful import Api, Resource, reqparse
 import random
 import consul
 
-c = consul.Consul()
-
-# poll a key for updates
-index = None
-while True:
-    index, data = c.kv.get('foo', index=index)
-    print data['Value']
-
-# in another process
-c.kv.put('foo', 'bar')
-
 app = Flask(__name__)
 api = Api(app)
+
+
+consul_client = consul.Consul(
+    host='cserver',
+    port=8500,
+)
+print(consul_client)
+
+# Set DEBUG flag using Consul KV store
+index, data = consul_client.kv.get('web/debug')
+DEBUG = data.get('Value', True)
+
+comm = '''
 
 class Consul(Resource):
     def get(self, id=0):
@@ -43,5 +45,7 @@ class Consul(Resource):
         return quote, 201       
 
 api.add_resource(Consul, "/get_value", "/get_value/", "/get_value/<int:id>")
+
+'''
 if __name__ == '__main__':
     app.run(debug=True)        
