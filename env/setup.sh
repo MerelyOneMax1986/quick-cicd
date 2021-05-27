@@ -1,5 +1,5 @@
 # Run consul server
-docker run \
+docker rm -f cserver && docker run \
     -d \
     -p 8500:8500 \
     -p 8600:8600/udp \
@@ -7,7 +7,7 @@ docker run \
     consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
 
 # Run consul client
-docker run \
+docker rm -f cclient && docker run \
    --name=cclient \
    consul agent -node=client-1 -join=172.17.0.2
 
@@ -17,6 +17,7 @@ cd env/jenkins
 # Build custon Jenkins installation
 docker build . --tag jenkins-docker
 
+# Run custom image with 2 preinstalled jobs and plugins
 docker rm -f jenkins && docker run \
     --name jenkins \
     -p 8080:8080 \
