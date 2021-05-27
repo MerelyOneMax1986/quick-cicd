@@ -17,7 +17,7 @@ dig @127.0.0.1 -p 8600 app.service.consul
 
 ## Try your Docker app API
 
-curl @127.0.0.1 -p 8600 app.service.consul/get_value?first-key <br />
+curl @127.0.0.1 -p 8600 app.service.consul/get_value/first-key <br />
 5 <br /> 
-curl @127.0.0.1 -p 8600 app.service.consul/set_value?first-key=first-value <br />
+curl @127.0.0.1 -p 8600 app.service.consul/set_value?key=first-key&value=first-value <br />
 Success <br />

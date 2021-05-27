@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
-import random
 import consul
 
 app = Flask(__name__)
@@ -9,46 +8,45 @@ api = Api(app)
 
 consul_client = consul.Consul(
     host='cserver',
+    #host='172.19.0.2',
     port=8500,
 )
+
 print(consul_client)
 
-try:
-    # Set DEBUG flag using Consul KV store
-    index, data = consul_client.kv.get('first-key')
-    DEBUG = data.get('Value')
-except ValueError:
-    print("Oops!  That was no valid number.  Try again...")
-
-comm = '''
-
+# GET
 class Consul(Resource):
-    def get(self, id=0):
-        if id == 0:
-            return random.choice(ai_quotes), 200
-        for quote in ai_quotes:
-            if(quote["id"] == id):
-                return quote, 200
-        return "Quote not found", 404
+    def get(self, key):
+        value = ''
+        try:
+            # Set DEBUG flag using Consul KV store
+            index, data = consul_client.kv.get(key)
+            if data:
+                value = data.get('Value') 
+                return value.decode("utf-8"), 200
+            else:
+                return "Oops!  That was no valid key.  Try again...", 404    
+        except ValueError:
+            return "Oops!  That was no valid key.  Try again...", 404
 
-    def post(self, id):
+
+# POST
+class ConsulList(Resource):
+    def post(self):    
         parser = reqparse.RequestParser()
-        parser.add_argument("author")
-        parser.add_argument("quote")
-        params = parser.parse_args()
-        for quote in ai_quotes:
-            if(id == quote["id"]):
-                return f"Quote with id {id} already exists", 400
-        quote = {
-            "id": int(id),
-            "author": params["author"],
-            "quote": params["quote"]
-        }
-        ai_quotes.append(quote)
-        return quote, 201       
+        parser.add_argument('key', type=str, help='Consul key')
+        parser.add_argument('value', type=str, help='Consul value')
+        args = parser.parse_args()
+        print(args['key'])
+        print(args['value'])
+        consul_client.kv.put(args['key'], args['value'])
+        return "Success", 200
 
-api.add_resource(Consul, "/get_value", "/get_value/", "/get_value/<int:id>")
+##
+## Actually setup the Api resource routing here
+##
+api.add_resource(Consul, '/get_value/<string:key>')
+api.add_resource(ConsulList, '/set_value')
 
-'''
 if __name__ == '__main__':
-    app.run(debug=True)        
+    app.run(debug=True)     
