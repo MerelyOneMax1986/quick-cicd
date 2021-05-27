@@ -11,9 +11,6 @@ docker rm -f cclient && docker run \
    --name=cclient \
    consul agent -node=client-1 -join=172.17.0.2
 
-# Run jenkins
-cd env/jenkins 
-
 # Build custon Jenkins installation
 docker build --tag jenkins-docker ./jenkins/
 
