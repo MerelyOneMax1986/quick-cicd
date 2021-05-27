@@ -3,6 +3,7 @@ import hudson.plugins.git.*
 import hudson.plugins.git.extensions.*
 import hudson.plugins.git.extensions.impl.*
 import jenkins.model.Jenkins
+import hudson.model.ParametersDefinitionProperty
 import hudson.model.StringParameterDefinition
 
 def createJob (jobName, gitRepo, branch) {
