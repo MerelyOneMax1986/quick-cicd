@@ -6,6 +6,12 @@ docker rm -f cserver && docker run \
     --name=cserver \
     consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
 
+# Run consul client
+docker rm -f cclient && docker run \
+   -d \
+   --name=cclient \
+   consul agent -node=client-1 -join=$(docker exec -it cserver hostname -i | tr -d '\r\n')
+
 # Build custon Jenkins installation
 docker build --tag jenkins-docker ./jenkins/
 
@@ -20,9 +26,3 @@ docker rm -f jenkins && docker run \
     -v /var/run/docker.sock:/var/run/docker.sock \
     --name jenkins \
     jenkins-docker
-
-
-# Run consul client
-docker rm -f cclient && docker run \
-   --name=cclient \
-   consul agent -node=client-1 -join=$(docker exec -it cserver hostname -i | tr -d '\r\n')
