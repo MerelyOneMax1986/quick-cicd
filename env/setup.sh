@@ -11,6 +11,7 @@ docker build --tag jenkins-docker ./jenkins/
 
 # Run custom image with 2 preinstalled jobs and plugins
 docker rm -f jenkins && docker run \
+    -d \ 
     --name jenkins \
     -p 8080:8080 \
     -p 50000:50000 \
