@@ -12,6 +12,11 @@ docker run \
    consul agent -node=client-1 -join=172.17.0.2
 
 # Run jenkins
+cd env/jenkins 
+
+# Build custon Jenkins installation
+docker build . --tag jenkins-docker
+
 docker rm -f jenkins && docker run \
     --name jenkins \
     -p 8080:8080 \
