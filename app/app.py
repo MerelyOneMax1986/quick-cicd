@@ -15,8 +15,8 @@ print(consul_client)
 
 try:
     # Set DEBUG flag using Consul KV store
-    index, data = consul_client.kv.get('web/debug')
-    DEBUG = data.get('Value', True)
+    index, data = consul_client.kv.get('first-key')
+    DEBUG = data.get('Value')
 except ValueError:
     print("Oops!  That was no valid number.  Try again...")
 
