@@ -11,14 +11,14 @@ docker build --tag jenkins-docker ./jenkins/
 
 # Run custom image with 2 preinstalled jobs and plugins
 docker rm -f jenkins && docker run \
-    -d \ 
-    --name jenkins \
+    -d \     
     -p 8080:8080 \
     -p 50000:50000 \
     -v /var/jenkins_home \
     --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=password \
     --env JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
     -v /var/run/docker.sock:/var/run/docker.sock \
+    --name jenkins \
     jenkins-docker
 
 
