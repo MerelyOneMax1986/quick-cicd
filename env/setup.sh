@@ -1,5 +1,7 @@
+docker network create env-network
+
 # Run consul server
-docker rm -f cserver && docker run \
+docker rm -f cserver && docker run --net env-network \
     -d \
     -p 8500:8500 \
     -p 8600:8600/udp \
@@ -7,7 +9,7 @@ docker rm -f cserver && docker run \
     consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
 
 # Run consul client
-docker rm -f cclient && docker run \
+docker rm -f cclient && docker run --net env-network \
    -d \
    --name=cclient \
    consul agent -node=client-1 -join=$(docker exec -it cserver hostname -i | tr -d '\r\n')
@@ -16,7 +18,7 @@ docker rm -f cclient && docker run \
 docker build --tag jenkins-docker ./jenkins/
 
 # Run custom image with 2 preinstalled jobs and plugins
-docker rm -f jenkins && docker run \
+docker rm -f jenkins && docker run --net env-network \
     -d \
     -p 8080:8080 \
     -p 50000:50000 \
