@@ -1,7 +1,7 @@
 # How to use
 
 ## Setup env
-Please, go to env folder and follow Readme.md
+Please, go to "env" folder and follow Readme.md
 
 
 ## CI/CD
